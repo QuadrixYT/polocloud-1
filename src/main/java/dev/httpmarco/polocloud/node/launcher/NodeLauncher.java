@@ -11,20 +11,22 @@ public class NodeLauncher {
     public static void main(String[] args) {
 
         Thread.currentThread().setUncaughtExceptionHandler((t, e) -> {
+            System.out.println("pololololololo");
             new RuntimeException(e);
         });
 
 
         try {
             Injector injector = Guice.createInjector(new NodeModule());
-
-            // register global injector
-            Node.injector(injector);
-
             System.setProperty("startup", String.valueOf(System.currentTimeMillis()));
             injector.getInstance(Node.class);
         } catch (Exception exception) {
-            exception.printStackTrace();
+            for (var errorLine : exception.getMessage().split("\\n", -1)) {
+                System.err.println(errorLine);
+            }
+            for (StackTraceElement traceElement : exception.getStackTrace()) {
+                System.err.println(traceElement);
+            }
         }
     }
 }

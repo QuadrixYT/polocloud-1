@@ -1,4 +1,17 @@
 {
   "version": 1,
-  "platforms": []
+  "platforms": [
+    {
+      "name": "paper",
+      "type": "SERVER",
+      "additions": [],
+      "versions": [
+        {
+          "version": "1.21",
+          "build": 109,
+          "downloadLink": "https://api.papermc.io/v2/projects/paper/versions/1.21/builds/%build%/downloads/paper-1.21-%build%.jar"
+        }
+      ]
+    }
+  ]
 }

@@ -6,12 +6,30 @@ import lombok.experimental.Accessors;
 
 import java.util.Set;
 
+// todo checklist platforms
+
+/**
+ * paper
+ * velocity
+ * vanilla
+ * purpur
+ * spigot
+ * bungeecord
+ * sponge powered
+ * minestom
+ * multipaper
+ * fabric
+ * (folia)
+ */
+
 @Getter
 @Accessors(fluent = true)
 @AllArgsConstructor
 public final class Platform {
 
     private String platform;
-    private Set<PlatformEntry> versions;
+    private PlatformType type;
+    private Set<PlatformAddition> additions;
+    private Set<PlatformVersion> versions;
 
 }

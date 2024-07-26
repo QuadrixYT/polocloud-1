@@ -4,15 +4,18 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import dev.httpmarco.polocloud.node.Closeable;
 import dev.httpmarco.polocloud.node.NodeConfig;
+import dev.httpmarco.polocloud.node.cluster.ClusterService;
 import dev.httpmarco.polocloud.node.cluster.LocalNode;
 import dev.httpmarco.polocloud.node.commands.CommandService;
 import dev.httpmarco.polocloud.node.logging.Log4j2Stream;
+import dev.httpmarco.polocloud.node.logging.Log4jColorTranslate;
 import dev.httpmarco.polocloud.node.terminal.util.TerminalColorUtil;
 import dev.httpmarco.polocloud.node.terminal.util.TerminalHeader;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.Level;
 import org.jline.jansi.Ansi;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -21,6 +24,8 @@ import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.InfoCmp;
 
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 @Getter
 @Accessors(fluent = true)
@@ -32,13 +37,17 @@ public final class JLineTerminal implements Closeable {
     private final LineReader lineReader;
     private final JLineCommandReadingThread commandReadingThread;
 
+    private static final SimpleDateFormat TERMINAL_LAYOUT = new SimpleDateFormat("HH:mm:ss");
+
+
     @Inject
     @SneakyThrows
-    public JLineTerminal(CommandService commandService, NodeConfig config) {
+    public JLineTerminal(CommandService commandService, ClusterService clusterService, NodeConfig config) {
         this.terminal = TerminalBuilder.builder()
                 .system(true)
                 .encoding(StandardCharsets.UTF_8)
                 .dumb(true)
+                .jansi(true)
                 .build();
 
         this.lineReader = LineReaderBuilder.builder()
@@ -56,10 +65,10 @@ public final class JLineTerminal implements Closeable {
                 .build();
 
 
-        System.setOut(new Log4j2Stream(log::info).printStream());
-        System.setErr(new Log4j2Stream(log::warn).printStream());
+        System.setOut(new Log4j2Stream(this::printLine).printStream());
+        System.setErr(new Log4j2Stream(log::error).printStream());
 
-        this.commandReadingThread = new JLineCommandReadingThread(config, commandService, this);
+        this.commandReadingThread = new JLineCommandReadingThread(config, clusterService, commandService, this);
 
         clear();
         TerminalHeader.print(this, config);

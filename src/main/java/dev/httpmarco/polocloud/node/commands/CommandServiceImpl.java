@@ -1,7 +1,12 @@
 package dev.httpmarco.polocloud.node.commands;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import dev.httpmarco.polocloud.node.Node;
+import dev.httpmarco.polocloud.node.cluster.ClusterService;
+import dev.httpmarco.polocloud.node.terminal.JLineTerminal;
+import dev.httpmarco.polocloud.node.terminal.commands.ClearCommand;
+import dev.httpmarco.polocloud.node.terminal.commands.GroupCommand;
+import dev.httpmarco.polocloud.node.terminal.commands.ShutdownCommand;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
@@ -18,6 +23,14 @@ public final class CommandServiceImpl implements CommandService {
 
     private final List<Command> commands = new ArrayList<>();
 
+    // todo search for a better inject way
+    @Inject
+    public CommandServiceImpl(JLineTerminal terminal, ClusterService clusterService) {
+        registerCommand(new ShutdownCommand(terminal, clusterService));
+        registerCommand(new GroupCommand());
+        registerCommand(new ClearCommand());
+    }
+
     @Contract(pure = true)
     @Override
     public @Unmodifiable List<Command> commandsByName(String name) {
@@ -26,7 +39,6 @@ public final class CommandServiceImpl implements CommandService {
 
     @Override
     public void registerCommand(Command command) {
-        Node.injector().injectMembers(command);
         this.commands.add(command);
     }
 

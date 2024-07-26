@@ -7,6 +7,6 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class JsonUtils {
 
-    final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    public final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
 }

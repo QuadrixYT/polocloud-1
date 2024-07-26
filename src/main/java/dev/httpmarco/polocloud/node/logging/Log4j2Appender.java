@@ -1,7 +1,5 @@
 package dev.httpmarco.polocloud.node.logging;
 
-import dev.httpmarco.polocloud.node.Node;
-import dev.httpmarco.polocloud.node.terminal.JLineTerminal;
 import org.apache.logging.log4j.core.*;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.config.Property;
@@ -40,12 +38,7 @@ public final class Log4j2Appender extends AbstractAppender {
     @Override
     public void append(@NotNull LogEvent event) {
         var message = event.getMessage().getFormattedMessage();
-
         var layout = "&7" + TERMINAL_LAYOUT.format(Calendar.getInstance().getTime()) + " &8| " + Log4jColorTranslate.translate(event.getLevel()) + event.getLevel().name() + "&8: &7" + message;
-        try {
-            Node.injector().getInstance(JLineTerminal.class).printLine(layout);
-        } catch (Exception e) {
-            System.out.println(layout);
-        }
+        System.out.println(layout);
     }
 }

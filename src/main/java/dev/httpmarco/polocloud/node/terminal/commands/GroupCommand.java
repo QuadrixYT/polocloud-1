@@ -13,7 +13,9 @@ public final class GroupCommand extends Command {
         var groupIdArgument = CommandArgumentType.Text("name");
 
         syntax(context -> {
+
             log.info("Successfully created &b{} &7group&8.", context.arg(groupIdArgument));
+
         }, "Create a new cluster group.", CommandArgumentType.Keyword("create"), groupIdArgument);
     }
 }

@@ -1,25 +1,30 @@
 package dev.httpmarco.polocloud.node.terminal;
 
 import dev.httpmarco.polocloud.node.NodeConfig;
+import dev.httpmarco.polocloud.node.NodeShutdown;
+import dev.httpmarco.polocloud.node.cluster.ClusterService;
 import dev.httpmarco.polocloud.node.commands.CommandService;
 import dev.httpmarco.polocloud.node.terminal.util.TerminalColorUtil;
 import org.jline.reader.EndOfFileException;
 import org.jline.reader.UserInterruptException;
+
 import java.util.Arrays;
 
 public final class JLineCommandReadingThread extends Thread {
 
     private final NodeConfig localNodeImpl;
+    private final ClusterService clusterService;
     private final CommandService commandService;
     private final JLineTerminal terminal;
 
 
-    public JLineCommandReadingThread(NodeConfig localNodeImpl, CommandService commandService, JLineTerminal terminal) {
+    public JLineCommandReadingThread(NodeConfig localNodeImpl, ClusterService clusterService, CommandService commandService, JLineTerminal terminal) {
         this.localNodeImpl = localNodeImpl;
         this.commandService = commandService;
         this.terminal = terminal;
+        this.clusterService = clusterService;
 
-        setContextClassLoader(Thread.currentThread().getContextClassLoader());
+        setContextClassLoader(ClassLoader.getSystemClassLoader());
     }
 
     @Override
@@ -44,7 +49,7 @@ public final class JLineCommandReadingThread extends Thread {
                 } catch (EndOfFileException ignore) {
                 }
             } catch (UserInterruptException exception) {
-                System.exit(-1);
+                NodeShutdown.nodeShutdown(terminal, clusterService);
             }
         }
     }

@@ -8,7 +8,6 @@ import dev.httpmarco.polocloud.node.commands.CommandServiceImpl;
 import dev.httpmarco.polocloud.node.groups.ClusterGroupService;
 import dev.httpmarco.polocloud.node.groups.ClusterGroupServiceImpl;
 import dev.httpmarco.polocloud.node.platforms.PlatformService;
-import dev.httpmarco.polocloud.node.platforms.PlatformServiceImpl;
 import dev.httpmarco.polocloud.node.terminal.JLineTerminal;
 import dev.httpmarco.polocloud.node.util.Configurations;
 
@@ -26,7 +25,7 @@ public final class NodeModule extends AbstractModule {
         // terminal and logs
         bind(JLineTerminal.class).asEagerSingleton();
         bind(CommandService.class).to(CommandServiceImpl.class).asEagerSingleton();
-        bind(PlatformService.class).to(PlatformServiceImpl.class).asEagerSingleton();
+        bind(PlatformService.class).asEagerSingleton();
 
         // load global handler
         bind(ClusterService.class).to(ClusterServiceImpl.class);
