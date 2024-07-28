@@ -61,6 +61,11 @@ public final class ClusterGroupFactory {
     @SneakyThrows
     public @NotNull Set<ClusterGroup> readGroups() {
         var groups = new HashSet<ClusterGroup>();
+
+        if (!Files.exists(GROUP_DIR)) {
+            return groups;
+        }
+
         for (File file : Objects.requireNonNull(GROUP_DIR.toFile().listFiles())) {
             groups.add(GROUP_GSON.fromJson(Files.readString(file.toPath()), ClusterGroup.class));
         }
