@@ -8,6 +8,8 @@ import dev.httpmarco.polocloud.api.groups.ClusterGroupService;
 import dev.httpmarco.polocloud.node.platforms.PlatformService;
 import lombok.extern.log4j.Log4j2;
 
+import java.util.Arrays;
+
 @Log4j2
 public final class GroupCommand extends Command {
 
@@ -21,7 +23,7 @@ public final class GroupCommand extends Command {
         syntax(context -> {
             log.info("Following &b{} &7groups are loading&8:", groupService.groups().size());
             groupService.groups().forEach(group -> log.info("&8- &4{}&8: (&7{}&8)", group.name(), group));
-        }, CommandArgumentType.Keyword("list"));
+        }, "List all registered groups&8.", CommandArgumentType.Keyword("list"));
 
         var platformArgument = CommandArgumentType.Platform(platformService, "platform");
         var platformVersionArgument = CommandArgumentType.PlatformVersion(platformService, "version");
@@ -52,21 +54,28 @@ public final class GroupCommand extends Command {
                 maxOnlineArgument
         );
 
-        syntax(context -> groupService.delete(context.arg(groupArgument).name()).ifPresentOrElse(s -> log.warn("Cannot delete group: {}", s), () -> log.info("Successfully delete group {} in cluster!", context.arg(groupArgument).name())), groupArgument, CommandArgumentType.Keyword("delete"));
+        syntax(context ->
+                groupService.delete(context.arg(groupArgument).name())
+                        .ifPresentOrElse(
+                                s -> log.warn("Cannot delete group: {}", s),
+                                () -> log.info("Successfully delete group {} in cluster!", context.arg(groupArgument).name())
+                        ), "Delete the selected group&8.", groupArgument, CommandArgumentType.Keyword("delete"));
 
         syntax(context -> {
             var group = context.arg(groupArgument);
             log.info("Name&8: &b{}", group.name());
+            log.info("Runtime nodes&8: &b{}", String.join("&8, &b", group.nodes()));
             log.info("Platform&8: &b{}-{}", group.platform().platform(), group.platform().version());
+            log.info("Static service&8: &b" + group.staticService());
             log.info("Minimum memory&8: &b{}", group.minMemory());
             log.info("Maximum memory&8: &b{}", group.maxMemory());
             log.info("Minimum online services&8: &b{}", group.minOnlineServerInstances());
             log.info("Maximum online services&8: &b{}", group.maxOnlineServerInstances());
-        }, groupArgument, CommandArgumentType.Keyword("info"));
+        }, "Show all information about a group&8.", groupArgument, CommandArgumentType.Keyword("info"));
 
         syntax(context -> {
 
-        }, groupArgument, CommandArgumentType.Keyword("shutdown"));
+        }, "Shutdown all services with this group&8.", groupArgument, CommandArgumentType.Keyword("shutdown"));
 
 
         var editKey = CommandArgumentType.Text("key");
@@ -74,7 +83,7 @@ public final class GroupCommand extends Command {
 
         syntax(context -> {
 
-        }, groupArgument, CommandArgumentType.Keyword("edit"), editKey, editValue);
+        }, "Change a property of a group&8.", groupArgument, CommandArgumentType.Keyword("edit"), editKey, editValue);
 
     }
 }

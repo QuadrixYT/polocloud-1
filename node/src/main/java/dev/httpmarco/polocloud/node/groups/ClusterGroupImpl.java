@@ -14,7 +14,7 @@ public class ClusterGroupImpl implements ClusterGroup {
     private final String name;
     private final PlatformGroupDisplay platform;
 
-    private String[] node;
+    private String[] nodes;
     private int minMemory;
     private int maxMemory;
     private boolean staticService;

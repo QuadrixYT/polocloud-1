@@ -5,7 +5,7 @@ import dev.httpmarco.polocloud.api.platforms.PlatformGroupDisplay;
 
 public interface ClusterGroup extends Named {
 
-    String[] node();
+    String[] nodes();
 
     int minMemory();
 
