@@ -2,7 +2,7 @@ package dev.httpmarco.polocloud.node;
 
 import dev.httpmarco.polocloud.api.groups.ClusterGroupService;
 import dev.httpmarco.polocloud.node.cluster.ClusterService;
-import dev.httpmarco.polocloud.node.cluster.impl.ClusterServiceImpl;
+import dev.httpmarco.polocloud.node.cluster.ClusterServiceImpl;
 import dev.httpmarco.polocloud.node.commands.CommandServiceImpl;
 import dev.httpmarco.polocloud.node.groups.ClusterGroupServiceImpl;
 import dev.httpmarco.polocloud.node.platforms.PlatformService;
