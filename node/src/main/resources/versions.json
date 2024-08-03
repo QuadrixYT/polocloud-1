@@ -4,6 +4,7 @@
     {
       "platform": "paper",
       "type": "SERVER",
+      "patcher": "paperclip",
       "versions": [
         {
           "version": "1.21",
